@@ -1,0 +1,20 @@
+{
+  "name": "earthwalker",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "test": "vitest run",
+    "check:parity": "node scripts/check-parity.mjs",
+    "check:private": "node scripts/privacy-scan.mjs"
+  },
+  "dependencies": {
+    "astro": "^5.0.0"
+  },
+  "devDependencies": {
+    "vitest": "^2.0.0"
+  }
+}
