@@ -1,0 +1,2 @@
+# One word or phrase per line. Copy this file to private-words.txt (gitignored).
+# Matching ignores case and diacritics. Lines starting with # are comments.
