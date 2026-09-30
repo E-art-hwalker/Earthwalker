@@ -1,0 +1,37 @@
+---
+import Base from '../../layouts/Base.astro';
+import { LOCALES, keyOf, url, type Lang } from '../../lib/i18n';
+import { listEntries } from '../../lib/content';
+import { ui } from '../../lib/ui';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+const lang = Astro.params.lang as Lang;
+const t = ui[lang];
+const base = import.meta.env.BASE_URL;
+const projects = (await listEntries('projects', lang)).filter((p) => p.data.featured);
+const log = (await listEntries('log', lang)).slice(0, 3);
+---
+<Base lang={lang} title={t.home}>
+  <h2>{t.featured}</h2>
+  <ul class="list">
+    {projects.map((p) => (
+      <li>
+        <a href={url(base, `/${lang}/projects/${keyOf(p.id)}/`)}><strong>{p.data.title}</strong></a>
+        <div class="muted">{p.data.summary}</div>
+      </li>
+    ))}
+  </ul>
+  <h2>{t.latest}</h2>
+  {log.length === 0 ? <p class="muted">{t.noLog}</p> : (
+    <ul class="list">
+      {log.map((e) => (
+        <li>
+          <a href={url(base, `/${lang}/log/${keyOf(e.id)}/`)}>{e.data.title}</a>
+          <div class="muted">{e.data.date.toISOString().slice(0, 10)}</div>
+        </li>
+      ))}
+    </ul>
+  )}
+</Base>

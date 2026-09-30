@@ -1,0 +1,25 @@
+---
+import Base from '../../../layouts/Base.astro';
+import { LOCALES, keyOf, url, type Lang } from '../../../lib/i18n';
+import { listEntries } from '../../../lib/content';
+import { ui } from '../../../lib/ui';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+const lang = Astro.params.lang as Lang;
+const t = ui[lang];
+const base = import.meta.env.BASE_URL;
+const items = await listEntries('projects', lang);
+---
+<Base lang={lang} title={t.projects}>
+  <h1>{t.projects}</h1>
+  <ul class="list">
+    {items.map((p) => (
+      <li>
+        <a href={url(base, `/${lang}/projects/${keyOf(p.id)}/`)}><strong>{p.data.title}</strong></a>
+        <div class="muted">{p.data.summary}</div>
+      </li>
+    ))}
+  </ul>
+</Base>

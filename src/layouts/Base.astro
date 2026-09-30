@@ -1,0 +1,44 @@
+---
+import { switcherHref, url, type AltPaths, type Lang } from '../lib/i18n';
+import { ui } from '../lib/ui';
+
+interface Props { lang: Lang; title: string; alt?: AltPaths; description?: string }
+const { lang, title, alt = {}, description } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const other: Lang = lang === 'en' ? 'sk' : 'en';
+const t = ui[lang];
+---
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title} · {t.siteTitle}</title>
+    {description && <meta name="description" content={description} />}
+    <style>
+      :root { color-scheme: light dark; --fg: #1d1d1b; --bg: #fbfaf7; --muted: #6b6b66; --accent: #2f6b3f; }
+      @media (prefers-color-scheme: dark) { :root { --fg: #ecebe6; --bg: #151614; --muted: #9a9a93; --accent: #7fc08f; } }
+      body { margin: 0; background: var(--bg); color: var(--fg); font: 18px/1.6 system-ui, sans-serif; }
+      .wrap { max-width: 42rem; margin: 0 auto; padding: 0 16px 4rem; }
+      header { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; justify-content: space-between; padding: 1.25rem 0; }
+      nav { display: flex; gap: 1rem; flex-wrap: wrap; }
+      a { color: var(--accent); }
+      .muted { color: var(--muted); }
+      ul.list { list-style: none; padding: 0; } ul.list li { margin: 1.25rem 0; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <nav>
+          <a href={url(base, `/${lang}/`)}><strong>{t.siteTitle}</strong></a>
+          <a href={url(base, `/${lang}/projects/`)}>{t.projects}</a>
+          <a href={url(base, `/${lang}/log/`)}>{t.log}</a>
+          <a href={url(base, `/${lang}/about/`)}>{t.about}</a>
+        </nav>
+        <a href={switcherHref(other, alt, base)} lang={other} hreflang={other}>{t.otherLang}</a>
+      </header>
+      <main><slot /></main>
+    </div>
+  </body>
+</html>

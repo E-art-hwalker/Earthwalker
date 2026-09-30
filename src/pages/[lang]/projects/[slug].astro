@@ -1,0 +1,30 @@
+---
+import { render } from 'astro:content';
+import Base from '../../../layouts/Base.astro';
+import { LOCALES, keyOf, url, type Lang } from '../../../lib/i18n';
+import { listEntries, hasTranslation } from '../../../lib/content';
+import { ui } from '../../../lib/ui';
+
+export async function getStaticPaths() {
+  const paths = [];
+  for (const lang of LOCALES)
+    for (const entry of await listEntries('projects', lang))
+      paths.push({ params: { lang, slug: keyOf(entry.id) }, props: { entry } });
+  return paths;
+}
+const { entry } = Astro.props;
+const lang = Astro.params.lang as Lang;
+const slug = Astro.params.slug as string;
+const other: Lang = lang === 'en' ? 'sk' : 'en';
+const base = import.meta.env.BASE_URL;
+const alt = (await hasTranslation('projects', slug, other))
+  ? { [other]: url(base, `/${other}/projects/${slug}/`) }
+  : {};
+const { Content } = await render(entry);
+const t = ui[lang];
+---
+<Base lang={lang} title={entry.data.title} alt={alt} description={entry.data.summary}>
+  <p><a href={url(base, `/${lang}/projects/`)}>{t.back}</a></p>
+  <h1>{entry.data.title}</h1>
+  <Content />
+</Base>

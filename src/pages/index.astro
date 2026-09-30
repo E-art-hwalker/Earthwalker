@@ -1,0 +1,14 @@
+---
+import { url, DEFAULT_LANG } from '../lib/i18n';
+const target = url(import.meta.env.BASE_URL, `/${DEFAULT_LANG}/`);
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="refresh" content={`0; url=${target}`} />
+    <link rel="canonical" href={target} />
+    <title>Earthwalker</title>
+  </head>
+  <body><a href={target}>Continue</a></body>
+</html>
