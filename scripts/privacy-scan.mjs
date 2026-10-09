@@ -6,9 +6,22 @@ export function normalize(s) {
   return s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 }
 
+function escapeRegExp(s) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+// A word starting with "=" only matches as a whole word; others match anywhere.
 export function scanText(text, words) {
   const hay = normalize(text);
-  return words.filter((w) => w.trim() !== '' && hay.includes(normalize(w)));
+  return words.filter((w) => {
+    if (w.trim() === '') return false;
+    if (w.startsWith('=')) {
+      const term = normalize(w.slice(1).trim());
+      if (term === '') return false;
+      return new RegExp(`(?<![\\p{L}\\p{N}])${escapeRegExp(term)}(?![\\p{L}\\p{N}])`, 'u').test(hay);
+    }
+    return hay.includes(normalize(w));
+  });
 }
 
 export function scanDir(dir, words) {

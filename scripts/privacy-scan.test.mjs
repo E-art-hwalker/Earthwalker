@@ -21,6 +21,14 @@ describe('scanText', () => {
   it('ignores empty words', () => {
     expect(scanText('hello', [''])).toEqual([]);
   });
+  it('matches a "=" entry only as a whole word', () => {
+    expect(scanText('štandardná aplikácia', ['=nda'])).toEqual([]);
+    expect(scanText('Sign the NDA today', ['=nda'])).toEqual(['=nda']);
+    expect(scanText('NDA.', ['=nda'])).toEqual(['=nda']);
+  });
+  it('still matches plain entries inside longer words', () => {
+    expect(scanText('standard', ['nda'])).toEqual(['nda']);
+  });
 });
 
 describe('scanDir and loadWords', () => {

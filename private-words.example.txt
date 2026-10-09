@@ -1,2 +1,2 @@
 # One word or phrase per line. Copy this file to private-words.txt (gitignored).
-# Matching ignores case and diacritics. Lines starting with # are comments.
+# Matching ignores case and diacritics. Prefix a word with = to match whole words only (e.g. =nda). Lines starting with # are comments.
